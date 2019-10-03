@@ -151,6 +151,7 @@ public class MainUserInterface extends JFrame{
         this.quick_sort_button = new JButton("Ordenamiento rápido");
         this.quick_sort_button.setMargin(new Insets(10, 15, 10, 15));
         this.quick_sort_button.setFont(font);
+        this.quick_sort_button.addActionListener(this::QuickSortEventListener);
         constraints.gridy = 2;
         constraints.gridx = 2;
         this.buttons_panel.add(this.quick_sort_button, constraints);
@@ -212,6 +213,11 @@ public class MainUserInterface extends JFrame{
         ArrayList<Double> array = getArray();
         if(array != null)
             setResponse(sort.ShellSort(array));
+    }
+    private void QuickSortEventListener(ActionEvent evt){
+        ArrayList<Double> array = getArray();
+        if(array != null)
+            setResponse(sort.QuickSort(array));
     }
     //Obtiene el array del JTextField
     //Lo valida y lo convierte en un ArrayList<Double>

@@ -61,4 +61,30 @@ public class SortAlgorithms {
         }while(step >= 1);
         return new Response(array, System.nanoTime() - start_time, "Ordenamiento por el método Shell");
     }
+    protected Response QuickSort(ArrayList<Double> array){
+        long start_time = System.nanoTime();
+        array = quickSorting(array);
+        return new Response(array, System.nanoTime() - start_time, "Ordenamiento por ordenamiento rápido");
+    }
+    private ArrayList<Double> quickSorting (ArrayList<Double> array){
+        if(array.size() > 0){
+            ArrayList<Double> left = new ArrayList<>();
+            ArrayList<Double> right = new ArrayList<>();
+            double pivot = array.get(0);
+            if(array.size() > 1){
+                for(int i = 1; i < array.size(); i++){
+                    if(array.get(i) < pivot)
+                        left.add(array.get(i));
+                    else
+                        right.add(array.get(i));
+                }
+                left = quickSorting(left);
+                right = quickSorting(right);
+            }
+            left.add(pivot);
+            left.addAll(right);
+            array = left;
+        }
+        return array;
+    }
 }
