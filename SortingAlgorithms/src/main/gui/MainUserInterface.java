@@ -24,6 +24,7 @@ public class MainUserInterface extends JFrame{
     private JButton bubble_sort_button;
     private JButton Shell_sort_button;
     private JButton quick_sort_button;
+    private JButton merge_sort_button;
     private JPanel main_panel;
     private JPanel array_panel;
     private JPanel buttons_panel;
@@ -33,7 +34,7 @@ public class MainUserInterface extends JFrame{
     private JLabel algorithm_name;
     private JLabel response_time;
     private final SortAlgorithms sort;
-    private final Pattern pattern = Pattern.compile("^([-]?[0-9]+([.][0-9]+)?([,][-]?[0-9]+([.][0-9]+)?)*)$");
+    private final Pattern pattern = Pattern.compile("^([-]?[0-9]*+([.][0-9]+)?([,][-]?[0-9]*+([.][0-9]+)?)*)$");
     
     public MainUserInterface(){
         this.sort = new SortAlgorithms();
@@ -93,7 +94,7 @@ public class MainUserInterface extends JFrame{
         //Declarando el TextField
         array_text_field = new JTextField();
         array_text_field.setFont(font);
-        array_text_field.setToolTipText("Por favor, ingresa los decimales menores a uno de la siguiente manera: 0.1");
+        array_text_field.setToolTipText("Ingresa los elementos a ordenar separados por coma");
         //Valida los elementos del array, que sean números reales separados por coma
         //^([-]?[0-9]+([.][0-9]+)?([,][-]?[0-9]+([.][0-9]+)?)*)$
         constraints.gridy = 1;
@@ -132,7 +133,7 @@ public class MainUserInterface extends JFrame{
         this.bubble_sort_button.setFont(font);
         this.bubble_sort_button.addActionListener(this::bubbleSortEventListener);
         constraints.gridy = 1;
-        constraints.gridx = 2;
+        constraints.gridx = 1;
         this.buttons_panel.add(this.bubble_sort_button, constraints);
         this.add(this.buttons_panel);
         
@@ -142,19 +143,30 @@ public class MainUserInterface extends JFrame{
         this.Shell_sort_button.setMargin(new Insets(10, 15, 10, 15));
         this.Shell_sort_button.setFont(font);
         this.Shell_sort_button.addActionListener(this::ShellSortEventListener);
-        constraints.gridy = 2;
-        constraints.gridx = 0;
+        constraints.gridy = 1;
+        constraints.gridx = 2;
         this.buttons_panel.add(this.Shell_sort_button, constraints);
         
-        //Ordenamiento por el método burbuja recursivo
+        //Ordenamiento por ordenamiento rápido
         //Declarando botón
         this.quick_sort_button = new JButton("Ordenamiento rápido");
         this.quick_sort_button.setMargin(new Insets(10, 15, 10, 15));
         this.quick_sort_button.setFont(font);
         this.quick_sort_button.addActionListener(this::QuickSortEventListener);
         constraints.gridy = 2;
-        constraints.gridx = 2;
+        constraints.gridx = 0;
         this.buttons_panel.add(this.quick_sort_button, constraints);
+        
+        //Ordenamiento por unión
+        //Declarando botón
+        this.merge_sort_button = new JButton("Ordenamiento por unión");
+        this.merge_sort_button.setMargin(new Insets(10, 15, 10, 15));
+        this.merge_sort_button.setFont(font);
+        this.merge_sort_button.addActionListener(this::MergeSortEventListener);
+        constraints.gridy = 2;
+        constraints.gridx = 1;
+        this.buttons_panel.add(this.merge_sort_button, constraints);
+        
         return this.buttons_panel;
     }
     private JPanel initAnswerPanel(GridBagConstraints constraints, EmptyBorder margin, Font font){
@@ -217,7 +229,12 @@ public class MainUserInterface extends JFrame{
     private void QuickSortEventListener(ActionEvent evt){
         ArrayList<Double> array = getArray();
         if(array != null)
-            setResponse(sort.QuickSort(array));
+            setResponse(sort.quickSort(array));
+    }
+    private void MergeSortEventListener(ActionEvent evt){
+        ArrayList<Double> array = getArray();
+        if(array != null)
+            setResponse(sort.mergeSort(array));
     }
     //Obtiene el array del JTextField
     //Lo valida y lo convierte en un ArrayList<Double>
@@ -225,7 +242,13 @@ public class MainUserInterface extends JFrame{
         String text = this.array_text_field.getText().replaceAll("\\s","")
                 .replace("[", "").replace("]", "");
         Matcher match = this.pattern.matcher(text);
-        if(match.matches()){
+        if(text.isEmpty()){
+            String message = "Te faltó escribir el arreglo, introduce los elementos a ordenar";
+            String title = "Introduce algo";
+            JOptionPane.showMessageDialog(this.getContentPane(), message, 
+                    title, JOptionPane.ERROR_MESSAGE);
+        }
+        else if(match.matches()){
             String[] string_array = text.split(",");
             ArrayList<Double> array = new ArrayList<>();
             for(String str: string_array)
@@ -233,7 +256,7 @@ public class MainUserInterface extends JFrame{
             return array;
         }else{
             String message = "El arreglo no tiene un formato válido, "
-                    + "recuerda poner los decimales menores a 1 iniciando con 0";
+                    + "introduce los elementos a ordenar separados por comas";
             String title = "Formato no válido";
             JOptionPane.showMessageDialog(this.getContentPane(), message, 
                     title, JOptionPane.ERROR_MESSAGE);
